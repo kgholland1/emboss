@@ -1,0 +1,66 @@
+[
+  {
+    "id": 1,
+    "title": "Process Duty Stamp",
+    "assignedTo": "Kofi Mensah",
+    "class": "text-primary",
+    "status": "On Process",
+    "deadline": "Aug 02, 2025"
+  },
+  {
+    "id": 2,
+    "title": "Verify Land Title Deed Application",
+    "assignedTo": "Ama Boateng",
+    "class": "text-success",
+    "status": "Pending",
+    "deadline": "Aug 05, 2025"
+  },
+  {
+    "id": 3,
+    "title": "Update Parcel Mapping Records",
+    "assignedTo": "Yaw Owusu",
+    "class": "text-warning",
+    "status": "On Process",
+    "deadline": "Aug 08, 2025"
+  },
+  {
+    "id": 4,
+    "title": "Issue Search Report for Client",
+    "assignedTo": "Akua Darko",
+    "class": "text-danger",
+    "status": "Delayed",
+    "deadline": "Aug 12, 2025"
+  },
+  {
+    "id": 5,
+    "title": "Scan and Archive Old Survey Plans",
+    "assignedTo": "Kwame Asante",
+    "class": "text-info",
+    "status": "On Process",
+    "deadline": "Aug 15, 2025"
+  },
+  {
+    "id": 6,
+    "title": "Validate Land Valuation Certificate",
+    "assignedTo": "Efua Appiah",
+    "class": "text-secondary",
+    "status": "Completed",
+    "deadline": "Aug 19, 2025"
+  },
+  {
+    "id": 7,
+    "title": "Cross-check Plot Boundaries Data",
+    "assignedTo": "Kojo Boadu",
+    "class": "text-dark",
+    "status": "Pending",
+    "deadline": "Aug 23, 2025"
+  },
+  {
+    "id": 8,
+    "title": "Prepare Lease Agreement Draft",
+    "assignedTo": "Abena Owusu",
+    "class": "text-muted",
+    "status": "On Process",
+    "deadline": "Aug 28, 2025"
+  }
+]
