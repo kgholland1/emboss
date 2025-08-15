@@ -11,9 +11,25 @@
                 <div
                   class="d-flex justify-content-between align-items-center cw-273"
                 >
-                <div style="display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap;">
+                    <div class="flex-shrink-0">
+                      <img
+                        style="width: 50px; height: 50px;"
+                        src="../../assets/images/coatarms.svg"
+                        alt="logo"
+                      />
+                    </div>
+                    <div class="lc-wordmark" role="img" aria-label="Lands Commission — Ministry of Lands and Natural Resources">
+                      <span class="lc-line1">
+                        <span class="lc-primary">LANDS</span>
+                        <span class="lc-accent">COMMISSION</span>
+                      </span>
+                      <span class="lc-line2">MINISTRY OF LANDS AND NATURAL RESOURCES</span>
+                    </div>
+
+
+                <!-- <div style="display:flex;gap:1.2rem;align-items:center;flex-wrap:wrap;">
                     <div class="logo logo--sm" role="img" aria-label="LC DEMO logo small"><span class="badge">LC</span><span class="dash">-</span><span class="word">DEMO</span></div>
-                </div>
+                </div> -->
                   <div>
                     <button
                       class="border-0 p-0 bg-transparent js-sidebar-expand flex-grow-1 ms-3 text-sm-end menu-bergur"
@@ -650,102 +666,43 @@ function toggleButtonVisibility(buttonId: string) {
 export default {}
 </script>
 <style>
-    :root{
-      /* easy theme variables */
-      --accent-1:  #0ea5a4; /* teal */
-      --accent-2:  #0369a1; /* deep blue */
-      --neutral:   rgba(0,0,0,0.75);
-      --text-strong: #06202a;
-      --size: 1rem; /* base unit -> scale with font-size */
-    }
-/* Logo wrapper — transparent by default (no background color) */
-.logo{
-  display:inline-flex;
-  align-items:center;
-  gap:.6em;
-  font-weight:700;
-  font-size:calc(var(--size) * 3.2); /* tune this with --size */
-  line-height:1;
-  letter-spacing: -0.02em;
-  user-select: none;
-  -webkit-font-smoothing:antialiased;
-  transform-origin:center;
-}
+  /* Container: fixed brand-mark box */
+  .lc-wordmark{
+    width:180px; height:50px;
+    display:flex; flex-direction:column; justify-content:center;
+    gap:6px; /* space between lines */
+    overflow:hidden; /* ensure max size */
+    color: #1a1a1a; /* inherits well; change to match your theme */
+  }
 
-/* 'LC' badge */
-.logo .badge{
-  display:inline-grid;
-  place-items:center;
-  width:1.35em;
-  height:1.35em;
-  border-radius:0.4em;
-  background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
-  box-shadow: 0 6px 18px rgba(3,25,40,0.12), inset 0 -6px 18px rgba(255,255,255,0.06);
-  color: white;
-  font-weight:800;
-  font-size:0.66em;
-  flex:0 0 auto;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
+  /* Line 1: bold, compact, with subtle accent */
+  .lc-line1{
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+    line-height:1; letter-spacing:0.8px; white-space:nowrap;
+    font-weight:800; font-size:16px; /* tuned to fit 150×50 */
+    color: green;
+    text-transform:uppercase;
+  }
+  .lc-primary{ opacity:.92; }
+  .lc-accent{
+    margin-left:6px;
+    background:linear-gradient(20deg, currentColor 0%, rgba(0,128,0,.85) 100%);
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    color: green;
+  }
 
-/* small decorative notch to give a custom mark feel */
-.logo .badge::after{
-  content:"";
-  position:relative;
-  display:block;
-  width:0.22em;
-  height:0.22em;
-  border-radius:0.06em;
-  transform:translate(0.38em, -0.36em) rotate(20deg);
-  box-shadow: -0.02em -0.02em 0 0 rgba(255,255,255,0.15);
-  opacity:0.9;
-}
+  /* Line 2: small, tracked out for legibility */
+  .lc-line2{
+    font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, "Helvetica Neue", Arial, "Noto Sans", "Liberation Sans", sans-serif;
+    font-weight:700; text-transform:uppercase;
+    line-height:1.05; letter-spacing:1.1px;
+    font-size:7px; /* long subtitle tuned to fit width */
+    opacity:.85;
+    color: green;
+  }
 
-/* dash */
-.logo .dash{
-  color:var(--neutral);
-  font-weight:800;
-  font-size:0.9em;
-  transform:translateY(0.02em);
-  opacity:0.95;
-}
-
-/* DEMO word */
-.logo .word{
-  color:var(--text-strong);
-  font-weight:800;
-  font-size:0.92em;
-  letter-spacing:0.08em;
-  text-transform:uppercase;
-  display:inline-block;
-}
-
-/* Thin underline accent that sits under DEMO */
-.logo .word::after{
-  content:"";
-  display:block;
-  margin-top:0.12em;
-  width:1.05ch;
-  height:0.12em;
-  border-radius:2px;
-  background:linear-gradient(90deg, var(--accent-2), var(--accent-1));
-  opacity:0.9;
-  transform-origin:left center;
-}
-
-/* sizes: small / medium / large helpers */
-.logo--sm{font-size:calc(var(--size) * 1.6);} /* e.g. favicons */
-.logo--md{font-size:calc(var(--size) * 2.6);} /* default */
-.logo--lg{font-size:calc(var(--size) * 4);}   /* hero */
-
-/* accessible focus state when used as a link/button */
-a.logo:focus{outline:3px solid color-mix(in srgb, var(--accent-1) 55%, white 45%); outline-offset:6px; border-radius:6px}
-
-/* responsive tweak for tiny containers */
-@media (max-width:320px){
-  .logo{gap:0.35em}
-  .logo .word::after{width:0.9ch}
-}
+  /* Optional: adapts nicely on dark backgrounds */
+  @media (prefers-color-scheme: dark){
+    .lc-wordmark{ color:#f1f1f1; }
+  }
 </style>

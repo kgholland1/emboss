@@ -16,11 +16,11 @@
                 Reference
               </th>
               <th class="text-dark fw-medium pt-0 pb-2 fs-14" scope="col">
-                Service
-              </th>
-              <th class="text-dark fw-medium pt-0 pb-2 fs-14" scope="col">
-                Description
+                Fee
               </th>              
+              <th class="text-dark fw-medium pt-0 pb-2 fs-14" scope="col">
+                Issuance Date
+              </th>             
               <th class="text-dark fw-medium pt-0 pb-2 fs-14" scope="col">
                 Created
               </th>
@@ -30,37 +30,31 @@
               <th class="text-dark fw-medium pt-0 pb-2 fs-14" scope="col">
                 Status
               </th>
-              <th class="text-dark fw-medium pt-0 pb-2 fs-14" scope="col">
-                Fee
-              </th>
               <th class="text-dark fw-medium pt-0 pb-2 fs-14" scope="col"></th>
             </tr>
           </thead>
 
           <tbody>
-            <tr v-for="project in recentOrders" :key="project.id">
+            <tr v-for="doc in recentOrders" :key="doc.id">
               <td class="ps-0">
-                <span class="text-start text-dark">{{ project.uniqueReference }}</span>
+                <span class="text-start text-dark">{{ doc.uniqueReference }}</span>
               </td>              
               <td>
-                <span class="text-dark">{{ project.serviceType }}</span>
+                <span class="d-block text-dark">₵{{ doc.fee }}</span>
               </td>
               <td>
-                <span class="text-dark">{{ project.description }}</span>
+                <span class="text-dark">{{ doc.stamp_date }}</span>
               </td>              
               <td>
-                <span class="text-dark">{{ project.created }}</span>
+                <span class="text-dark">{{ doc.created }}</span>
               </td>
               <td>
-                <span class="text-dark">{{ project.region }}</span>
+                <span class="text-dark">{{ doc.region }}</span>
               </td>
               <td>
-                <span :class="computeClass(project.status)">
-                  {{ project.status }}
+                <span :class="computeClass(doc.status)">
+                  {{ doc.status }}
                 </span>
-              </td>
-              <td>
-                <span class="d-block text-dark">₵{{ project.fees }}</span>
               </td>
               <td class="text-end text-center">
                 <div class="dropdown action-opt">
@@ -74,9 +68,9 @@
                   </button>
                   <ul class="dropdown-menu">
                     <li>
-                      <a class="dropdown-item" href="javascript:;" @click="viewDocument(project.id)">
+                      <a class="dropdown-item" href="javascript:;" @click="viewDocument(doc.id)">
                         <vue-feather type="eye"></vue-feather>
-                        View
+                        View/Edit
                       </a>
                     </li>
                     <li>
@@ -84,7 +78,7 @@
                         data-bs-toggle="offcanvas"
                         data-bs-target="#offcanvasRight"
                         aria-controls="offcanvasRight"
-                        @click="printStamp(project)">
+                        @click="printStamp(doc)">
                         <vue-feather type="printer"></vue-feather>
                         Print
                       </a>
@@ -116,84 +110,7 @@
           ></button>
         </div>
         <div class="offcanvas-body">
-          <EmbossStamp v-if="stampData" :stampData="stampData" />
-          <!-- <form>
-            <div class="row">
-              <div class="col-lg-12">
-                <div class="form-group mb-4">
-                  <label class="label">Your Name</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Write your name"
-                  />
-                </div>
-              </div>
-              <div class="col-lg-12">
-                <div class="form-group mb-4">
-                  <label class="label">Email</label>
-                  <input
-                    type="email"
-                    class="form-control"
-                    placeholder="Write your email"
-                  />
-                </div>
-              </div>
-              <div class="col-lg-12">
-                <div class="form-group mb-4">
-                  <label class="label">Location</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Write your location"
-                  />
-                </div>
-              </div>
-              <div class="col-lg-12">
-                <div class="form-group mb-4">
-                  <label class="label">Phone</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Write Phone location"
-                  />
-                </div>
-              </div>
-              <div class="col-lg-12">
-                <div class="form-group mb-4">
-                  <label class="label">Projects</label>
-                  <input
-                    type="text"
-                    class="form-control"
-                    placeholder="Write your projects"
-                  />
-                </div>
-              </div>
-              <div class="col-lg-12">
-                <div class="form-group mb-4">
-                  <label class="label">Joining Date</label>
-                  <input type="date" class="form-control" />
-                </div>
-              </div>
-              <div class="col-lg-12">
-                <div class="form-group mb-4">
-                  <label class="label">Photo</label>
-                  <input
-                    type="file"
-                    class="form-control"
-                    placeholder="Write your photo"
-                  />
-                </div>
-              </div>
-              <div class="col-lg-12">
-                <div class="form-group">
-                  <button type="submit" class="default-btn">
-                    Create Users List
-                  </button>
-                </div>
-              </div>
-            </div>
-          </form> -->
+          <StampList v-if="stampData" :stampData="stampData" />
         </div>
       </div>
       <!-- End Default Offcanvas From Area -->
@@ -205,7 +122,7 @@ import { ref, computed } from "vue"
 import { useRouter } from "vue-router"
 import useSearch from '@/Use/useDocumentList'
 import { type DocumentData } from "@/data/document-data"
-import EmbossStamp from "@/components/Stamp/EmbossStamp.vue";
+import StampList from "@/components/Stamp/StampList.vue"
 import formatDate from "@/utils/helper";
 
 const router = useRouter()
@@ -223,6 +140,7 @@ const recentOrders = computed(() => {
     .map((item, index) => ({
       ...item,
       created: formatDate(item.created),
+      stamp_date: formatDate(item.stamp_date),
       fees: item.fee.toFixed(2)
     }))
 })
