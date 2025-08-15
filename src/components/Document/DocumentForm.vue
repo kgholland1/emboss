@@ -99,7 +99,7 @@
           </div>
         </div>        
         <div class="row">
-          <div class="col-lg-6">
+          <div class="col-lg-4">
             <div class="form-group mb-4">
               <label class="label">Description</label>
               <input
@@ -134,6 +134,17 @@
                 <option value="Yaw Sarpong">Yaw Sarpong</option>
                 <option value="Adwoa Afriyie">Adwoa Afriyie</option>
               </select>
+            </div>
+          </div>
+          <div class="col-lg-2">
+            <div class="form-group mb-4">
+              <label class="label">Stamp Copies</label>
+              <input
+                type="number"
+                class="form-control"
+                placeholder="Enter Stamp copies"
+                v-model="document.stamp_no"
+              />
             </div>
           </div>
           <div class="col-lg-12">
@@ -239,7 +250,7 @@
           ></button>
         </div>
         <div class="offcanvas-body">
-          <EmbossStamp v-if="stampData" :stampData="stampData" />
+          <StampList v-if="stampData" :stampData="stampData" />
         </div>
       </div>
       <!-- End Default Offcanvas From Area -->      
@@ -253,7 +264,7 @@ import { useRoute, useRouter } from "vue-router"
 import { type DocumentData } from "@/data/document-data"
 import formatDate from "@/utils/helper"
 import useSearch from '@/Use/useDocumentList'
-import EmbossStamp from "@/components/Stamp/EmbossStamp.vue";
+import StampList from "@/components/Stamp/StampList.vue";
 
 const route = useRoute()
 const router = useRouter()
@@ -316,6 +327,7 @@ const document = ref<DocumentData>({
   status: "Pending",
   created: formatDate(new Date().toISOString()),
   created_by: "Jane Doe",
+  stamp_no: 1,
   stamp_date: "",
   stamped_by: "Jane Doe",
   region: "",
