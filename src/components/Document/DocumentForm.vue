@@ -357,7 +357,16 @@ const document = ref<DocumentData>({
   }
 
   const saveDocument = () => {
-    allDocuments.value.push(document.value)
+    if(isNewMode.value) {
+      allDocuments.value.push(document.value)
+    } else {
+      const docIndex = allDocuments.value.findIndex((doc) => doc.id === document.value.id) 
+      
+      if (docIndex !== -1) {
+        document.value.updated_date = new Date().toISOString().split('.')[0]
+        allDocuments.value.splice(docIndex, 1, document.value)
+      }      
+    }
     router.push("/document-list")
   }
 
