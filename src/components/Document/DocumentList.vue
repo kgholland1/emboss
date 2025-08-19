@@ -40,7 +40,7 @@
                 <span class="text-start text-dark">{{ doc.uniqueReference }}</span>
               </td>              
               <td>
-                <span class="d-block text-dark">₵{{ doc.fee }}</span>
+                <span class="d-block text-dark">₵{{ doc.fee.toFixed(2) }}</span>
               </td>
               <td>
                 <span class="text-dark">{{ doc.stamp_date }}</span>
@@ -73,7 +73,7 @@
                         View/Edit
                       </a>
                     </li>
-                    <li>
+                    <li v-if="doc.status === 'Complete'">
                       <a class="dropdown-item" href="javascript:;"           
                         data-bs-toggle="offcanvas"
                         data-bs-target="#offcanvasRight"
@@ -163,7 +163,7 @@ const recentOrders = computed(() => {
     .map((item) => ({
       ...item,
       created: formatDate(item.created),
-      stamp_date: formatDate(item.stamp_date),
+      stamp_date: item.stamp_date !== null ? formatDate(item.stamp_date) : item.stamp_date,
       fees: item.fee.toFixed(2)
     }))
 })

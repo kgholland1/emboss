@@ -147,7 +147,7 @@ const qrSvg = ref<HTMLDivElement | null>(null);
 // };
 
   const uniqueRef = computed(() => props.stampData.uniqueReference ?? "")
-  const stampDate = computed(() => formatDate(props.stampData.stamp_date))
+  const stampDate = computed(() => props.stampData.stamp_date !== null ? formatDate(props.stampData.stamp_date) : "" )
   const feeText = computed(() =>
     typeof props.stampData.fee === "number"
       ? `GHS ${props.stampData.fee.toFixed(2)}`
@@ -156,13 +156,18 @@ const qrSvg = ref<HTMLDivElement | null>(null);
   // const stampedBy = computed(() => props.stampData.region || "");
 // const footerText = "Ministry of Lands and Natural Resources"
 
+// function populateCodes() {
+//   const qrContent = JSON.stringify({
+//     id: props.stampData.id,
+//     ref: `${props.stampData.uniqueReference}`,
+//     date: stampDate.value,
+//     fee: props.stampData.fee
+//   });
+
 function populateCodes() {
-  const qrContent = JSON.stringify({
-    id: props.stampData.id,
-    ref: `${props.stampData.uniqueReference}`,
-    date: stampDate.value,
-    fee: props.stampData.fee
-  });
+  const qrContent = 
+    `${props.stampData.qrCode} | ${stampDate.value.toString()}`
+
 
   // Generate QR as SVG string
   QRCode.toString(qrContent, { type: "svg", errorCorrectionLevel: "M" }, (err: Error | null, svgString: string) => {

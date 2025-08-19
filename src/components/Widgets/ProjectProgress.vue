@@ -173,7 +173,7 @@ const pendingDocs = ref<DocumentData[]>(loadDocs("Pending"))
 
 const pendingPercent = computed<number>(() => {
   if (!searchResults) return 0 
-    return Math.ceil(pendingDocs.value.length / searchResults.value.length * 100)
+    return Math.floor(pendingDocs.value.length / searchResults.value.length * 100)
   })
 
 // const totalFees = computed<number>(() => Math.trunc(searchResults.value.reduce((prev, cur) => prev += cur.fee, 0)))

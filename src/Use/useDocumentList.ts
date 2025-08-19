@@ -42,6 +42,14 @@ const searchDocs = (searchItem: Ref<DocumentFilter | null> = ref(null)) => {
     );
   }
 
+  // qr code
+  if (searchItem.value?.qrCode) {
+    filteredResults = filteredResults.filter(
+      doc => doc.qrCode === searchItem.value?.qrCode
+    )
+  }
+
+
   // created
   if(searchItem.value?.created) {
     filteredResults = filteredResults.filter((document: DocumentData) => {
@@ -64,6 +72,9 @@ const searchDocs = (searchItem: Ref<DocumentFilter | null> = ref(null)) => {
   // stamp date
   if(searchItem.value?.stamp_date) {
     filteredResults = filteredResults.filter((document: DocumentData) => {
+      if (!document.stamp_date) {
+        return false
+      }
       if(searchItem.value?.stamp_date) {
           const searchDate = new Date(searchItem.value.stamp_date);
           const start = new Date(searchDate);
@@ -75,7 +86,7 @@ const searchDocs = (searchItem: Ref<DocumentFilter | null> = ref(null)) => {
 
           const docDate = new Date(document.stamp_date);
 
-          return docDate >= start && docDate <= end;
+          return docDate >= start && docDate <= end
       }
     })  
   }
