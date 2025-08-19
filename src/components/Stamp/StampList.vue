@@ -211,7 +211,7 @@ function printStamp() {
     // Add a small delay to ensure styles are loaded before printing
     setTimeout(() => {
         printWindow.print();
-    }, 250);
+    }, 800);
 }
 </script>
 
