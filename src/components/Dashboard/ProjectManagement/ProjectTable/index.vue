@@ -40,7 +40,7 @@
                 <span class="text-start text-dark">{{ doc.uniqueReference }}</span>
               </td>              
               <td>
-                <span class="d-block text-dark">₵{{ doc.fee }}</span>
+                <span class="d-block text-dark">₵{{ doc.fee.toFixed(2) }}</span>
               </td>
               <td>
                 <span class="text-dark">{{ doc.stamp_date }}</span>
@@ -73,7 +73,7 @@
                         View/Edit
                       </a>
                     </li>
-                    <li>
+                    <li v-if="doc.status === 'Complete'">
                       <a class="dropdown-item" href="javascript:;"           
                         data-bs-toggle="offcanvas"
                         data-bs-target="#offcanvasRight"
@@ -135,24 +135,26 @@ const recentOrders = computed(() => {
   if (!searchResults.value) return []
 
   return searchResults.value
-    .filter(doc => doc.status !== "Complete")
+    // .filter(doc => doc.status !== "Complete")
     .slice(0, 30)
     .map((item, index) => ({
       ...item,
       created: formatDate(item.created),
-      stamp_date: formatDate(item.stamp_date),
+      stamp_date: item.stamp_date ? formatDate(item.stamp_date) : item.stamp_date,
       fees: item.fee.toFixed(2)
     }))
 })
 
-  const wordPending = ref("Pending");
-  const wordProcessing = ref("Processing");
+  const wordPending = ref("Pending")
+  const wordProcessing = ref("Processing")
+    const wordComplete = ref("Complete")
 
 
 const computeClass = (classValue: string) => {
   return {
     "text-danger": wordPending.value === classValue,
     "text-warning": wordProcessing.value === classValue,
+    "text-success": wordComplete.value === classValue 
   }
 }
 
@@ -167,7 +169,7 @@ const viewDocument = (docId: string) => {
 
 const printStamp = (document: DocumentData) => {
   stampData.value = document
-  printHeader.value = `${document.serviceType} - ${document.uniqueReference}`
+  printHeader.value = `Reference - ${document.uniqueReference}`
 }
 
 </script>

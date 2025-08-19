@@ -18,11 +18,17 @@
           </div>
           <div class="col-lg-4">
             <div class="form-group mb-4">
-              <label class="label">Service Type</label>
-              <select
+              <label class="label">QR Code</label>
+              <input
+                type="text"
+                class="form-control"
+                disabled="true"
+                v-model="document.qrCode"
+              />                
+              <!-- <select
                 class="form-select form-control"
                 aria-label="Default select example"
-                v-model="document.serviceType"
+                v-model="document.qrCode"
               >
                 <option value="" selected>Select Service</option>
                   <option
@@ -32,7 +38,7 @@
                   >
                     {{ option.text }}
                   </option>
-              </select>
+              </select> -->
             </div>
           </div>
           <div class="col-lg-4">
@@ -143,6 +149,7 @@
                 type="number"
                 class="form-control"
                 placeholder="Enter Stamp copies"
+                max="3"
                 v-model="document.stamp_no"
               />
             </div>
@@ -259,12 +266,14 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from "vue"
+import { ref, computed, onMounted, watch } from "vue"
 import { useRoute, useRouter } from "vue-router"
 import { type DocumentData } from "@/data/document-data"
 import formatDate from "@/utils/helper"
 import useSearch from '@/Use/useDocumentList'
 import StampList from "@/components/Stamp/StampList.vue";
+import Swal from "sweetalert2"
+import 'sweetalert2/src/sweetalert2.scss'
 
 const route = useRoute()
 const router = useRouter()
@@ -282,15 +291,16 @@ const statusOptions = ref<{ value: string; text: string }[]>([
   { value: 'Complete', text: 'Complete' }
 ])
 
-const serviceOptions = ref<{ value: string; text: string }[]>([
-  { value: 'Cadastral Mapping', text: 'Cadastral Mapping' },
-  { value: 'Site Plan Approval', text: 'Site Plan Approval' },
-  { value: 'Property Valuation', text: 'Property Valuation' },
-  { value: 'Land Use Permit', text: 'Land Use Permit' },
-  { value: 'Boundary Demarcation', text: 'Boundary Demarcation' },
-  { value: 'Land Lease Renewal', text: 'Land Lease Renewal' },
-  { value: 'Property Ownership Transfer', text: 'Property Ownership Transfer' }
-])
+// const serviceOptions = ref<{ value: string; text: string }[]>([
+//   { value: 'Stamping', text: 'Stamping' },
+//   { value: 'Cadastral Mapping', text: 'Cadastral Mapping' },
+//   { value: 'Site Plan Approval', text: 'Site Plan Approval' },
+//   { value: 'Property Valuation', text: 'Property Valuation' },
+//   { value: 'Land Use Permit', text: 'Land Use Permit' },
+//   { value: 'Boundary Demarcation', text: 'Boundary Demarcation' },
+//   { value: 'Land Lease Renewal', text: 'Land Lease Renewal' },
+//   { value: 'Property Ownership Transfer', text: 'Property Ownership Transfer' }
+// ])
 
 const regionOptions = ref<{ value: string; text: string }[]>([
   { value: 'Ahafo', text: 'Ahafo' },
@@ -321,15 +331,16 @@ const generateUniqueId = () => {
 const document = ref<DocumentData>({
   id: generateUniqueId(),
   uniqueReference: "",
+  qrCode: "",
   fee: 0.00,
-  serviceType: "",
+  serviceType: "Stamping",
   description: "",
   status: "Pending",
   created: formatDate(new Date().toISOString()),
   created_by: "Jane Doe",
   stamp_no: 1,
-  stamp_date: "",
-  stamped_by: "Jane Doe",
+  stamp_date: null,
+  stamped_by: null,
   region: "",
   filename: "",
   note: "",
@@ -345,34 +356,59 @@ const document = ref<DocumentData>({
         document.value = JSON.parse(JSON.stringify(fetchDoc))
         document.value.created = formatDate(document.value.created)
         document.value.updated_date = formatDate(document.value.updated_date)        
-        document.value.stamp_date = new Date(document.value.stamp_date)
+        document.value.stamp_date = document.value.stamp_date ? new Date(document.value.stamp_date)
             .toISOString()
-            .split("T")[0]
+            .split("T")[0] : document.value.stamp_date
       }
     }
   })
+
+watch(
+  () => document.value.stamp_no,
+  (val) => {
+    if (val > 3) {
+      document.value.stamp_no = 3
+    }
+  }
+)
 
   const cancel = () => {
     router.push("/document-list") 
   }
 
   const saveDocument = () => {
+    let toaster
     if(isNewMode.value) {
+      const newGuid = crypto.randomUUID()
+
+      document.value.qrCode = `LC-${newGuid}`
       allDocuments.value.push(document.value)
+      toaster = "New record created successfully."
     } else {
       const docIndex = allDocuments.value.findIndex((doc) => doc.id === document.value.id) 
       
       if (docIndex !== -1) {
         document.value.updated_date = new Date().toISOString().split('.')[0]
         allDocuments.value.splice(docIndex, 1, document.value)
+        toaster = "Changes updated successfully.."
       }      
     }
+
+    Swal.fire({
+      toast: true,
+      position: 'top-end',
+      icon: 'success',
+      title: toaster,
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true
+    })
     router.push("/document-list")
   }
 
   const printStamp = () => {
     stampData.value = document.value
-    printHeader.value = `${document.value.serviceType} - ${document.value.uniqueReference}`
+    printHeader.value = `Reference - ${document.value.uniqueReference}`
   }
 
 
@@ -387,5 +423,35 @@ export default {
 
 .offcanvas-custom {
   width: 600px !important;
+}
+
+.swal2-toast {
+  padding: 0.75rem 1rem !important;
+  font-size: 0.85rem !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15) !important;
+  max-width: 280px !important;
+}
+
+/* Icon spacing */
+.swal2-toast .swal2-icon {
+  margin: 0 0.5rem 0 0 !important;
+  width: 1.25rem !important;
+  height: 1.25rem !important;
+}
+
+/* Title text */
+.swal2-toast .swal2-title {
+  font-weight: 500 !important;
+  font-size: 0.9rem !important;
+  color: #333 !important;
+  margin: 0 !important;
+}
+
+/* Progress bar (modern slim style) */
+.swal2-timer-progress-bar {
+  background: linear-gradient(90deg, #10b981, #3b82f6) !important;
+  height: 3px !important;
+  border-radius: 2px;
 }
 </style>

@@ -77,13 +77,14 @@
                   aria-label="Status" v-model="searchType"
                 >
                   <option value="" disabled selected>Select...</option>
+                  <option value="qrCode">QR Code</option>                  
                   <option value="uniqueReference">Reference</option>
                   <option value="created">Created date</option>
                   <option value="stamp_date">Stamp date</option>
                 </select>
 
                 <form class="src-form position-relative me-3" style="width: 250px;">
-                  <input v-if="searchType === 'uniqueReference' || searchType === ''"
+                  <input v-if="searchType === 'uniqueReference' || 'qrCode' || searchType === ''"
                     type="text"
                     class="form-control h-40"
                     placeholder="Search here..."
@@ -192,11 +193,13 @@ const searchDocument = () => {
   if (regionSelected.value)
     searchItem.value.region = regionSelected.value
 
-  if (searchType.value === "uniqueReference")
-    searchItem.value[searchType.value] = inputText.value
+  if (searchType.value === "uniqueReference" || searchType.value === "qrCode")
+    searchItem.value[searchType.value] = inputText.value  
 
   if (searchType.value === "created" || searchType.value === "stamp_date")
     searchItem.value[searchType.value] = inputDate.value    
+
+    console.log("SEARCH", searchItem.value)
 
     filteredResults.value = [...searchDocs(searchItem)]
 }
