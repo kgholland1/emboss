@@ -199,8 +199,6 @@ const searchDocument = () => {
   if (searchType.value === "created" || searchType.value === "stamp_date")
     searchItem.value[searchType.value] = inputDate.value    
 
-    console.log("SEARCH", searchItem.value)
-
     filteredResults.value = [...searchDocs(searchItem)]
 }
 
