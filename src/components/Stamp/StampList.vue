@@ -80,49 +80,139 @@ const addToList = (stampDetails: HTMLElement) => {
 //   printWindow.focus()
 //   printWindow.print()
 // }
+// function printStamp() {
+//   const combinedHTML = stampList.value
+//     .map(el => el.outerHTML)
+//     .join('<div style="margin-top: 10px;"></div>');
+
+//   const printWindow = window.open("", "_blank", "width=800,height=600");
+//   if (!printWindow) return;
+
+//   const styles = Array.from(document.querySelectorAll("link[rel='stylesheet'], style"))
+//     .map(n => n.outerHTML)
+//     .join("\n");
+
+//   printWindow.document.write(`
+//     <html>
+//       <head>
+//         <title>Stamp</title>
+//         ${styles}
+//         <style>
+//           body {
+//             margin: 0;
+//             padding: 0;
+//           }
+//           .print-container {
+//             display: flex;
+//             justify-content: center;
+//             align-items: flex-start;
+//             padding: 10mm;
+//           }
+//         </style>
+//       </head>
+//       <body>
+//         <div class="a4">
+//           ${combinedHTML}
+//         </div>
+//       </body>
+//     </html>
+//   `);
+
+//   printWindow.document.close();
+//   printWindow.focus();
+//   printWindow.print();
+// }
 function printStamp() {
-  const combinedHTML = stampList.value
-    .map(el => el.outerHTML)
-    .join('<div style="margin-top: 10px;"></div>');
+    // Create the stamps content wrapped in proper .a4 container
+    const stampsContent = stampList.value.map(el => el.outerHTML).join('');
+    
+    const printWindow = window.open("", "_blank", "width=800,height=600");
+    if (!printWindow) return;
 
-  const printWindow = window.open("", "_blank", "width=800,height=600");
-  if (!printWindow) return;
+    // Get existing styles but add print-specific fixes
+    const styles = Array.from(document.querySelectorAll("link[rel='stylesheet'], style"))
+        .map(n => n.outerHTML)
+        .join("\n");
 
-  const styles = Array.from(document.querySelectorAll("link[rel='stylesheet'], style"))
-    .map(n => n.outerHTML)
-    .join("\n");
-
-  printWindow.document.write(`
-    <html>
-      <head>
-        <title>Stamp</title>
-        ${styles}
+    // Additional print-specific CSS to fix the gray box issue and ensure proper layout
+    const printSpecificCSS = `
         <style>
-          body {
-            margin: 0;
-            padding: 0;
-          }
-          .print-container {
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            padding: 10mm;
-          }
+            /* Reset any inherited styles that might cause issues */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                color-adjust: exact !important;
+            }
+            
+            body {
+                margin: 0;
+                padding: 0;
+                background: white !important;
+            }
+            
+            /* Ensure .a4 container is properly set up for print */
+            .a4 {
+                width: 210mm !important;
+                height: 297mm !important;
+                box-sizing: border-box !important;
+                padding: 10mm !important;
+                font-family: "Helvetica Neue", Arial, sans-serif !important;
+                background: white !important;
+                display: grid !important;
+                grid-template-columns: repeat(auto-fit, minmax(90mm, 1fr)) !important;
+                grid-auto-rows: minmax(90mm, auto) !important;
+                gap: 5mm !important;
+                margin: 0 auto !important;
+                page-break-after: always !important;
+            }
+            
+            /* Fix the gray box issue by removing problematic shadows in print */
+            @media print {
+                .emboss-stamp {
+                    box-shadow: inset 2px 2px 4px rgba(255, 255, 255, 0.6), 
+                                inset -2px -2px 4px rgba(0, 0, 0, 0.1) !important;
+                    filter: none !important; /* Remove drop-shadow that causes gray box */
+                    -webkit-filter: none !important;
+                }
+                
+                /* Ensure all content is visible */
+                body * {
+                    visibility: hidden;
+                }
+                
+                .a4, .a4 * {
+                    visibility: visible !important;
+                }
+                
+                .emboss-stamp, .emboss-stamp * {
+                    visibility: visible !important;
+                }
+            }
         </style>
-      </head>
-      <body>
-        <div class="a4">
-          ${combinedHTML}
-        </div>
-      </body>
-    </html>
-  `);
+    `;
 
-  printWindow.document.close();
-  printWindow.focus();
-  printWindow.print();
+    printWindow.document.write(`
+        <html>
+        <head>
+            <title>Stamp</title>
+            ${styles}
+            ${printSpecificCSS}
+        </head>
+        <body>
+            <div class="a4">
+                ${stampsContent}
+            </div>
+        </body>
+        </html>
+    `);
+    
+    printWindow.document.close();
+    printWindow.focus();
+    
+    // Add a small delay to ensure styles are loaded before printing
+    setTimeout(() => {
+        printWindow.print();
+    }, 250);
 }
-
 </script>
 
 <style scoped>
