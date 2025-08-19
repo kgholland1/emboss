@@ -50,30 +50,77 @@ const addToList = (stampDetails: HTMLElement) => {
   stampList.value.push(stampDetails)
 }
 
+// function printStamp() {
+//   //const combinedHTML = stampList.value.map(el => el.outerHTML).join('<div style="margin-top: 10px;"></div>')
+
+//   const combinedHTML = `
+//   <div class="a4">
+//     ${stampList.value.map(el => el.outerHTML).join('<div style="margin-top: 10px;"></div>')}
+//   </div>`
+
+//   const printWindow = window.open("", "_blank", "width=800,height=600");
+//   if (!printWindow) return;
+//   const styles = Array.from(document.querySelectorAll("link[rel='stylesheet'], style"))
+//     .map(n => n.outerHTML)
+//     .join("\n");
+//   printWindow.document.write(`
+//     <html>
+//       <head>
+//         <title>Stamp</title>
+//         ${styles}
+//       </head>
+//       <body>
+
+//         ${combinedHTML}
+
+//       </body>
+//     </html>
+//   `)
+//   printWindow.document.close()
+//   printWindow.focus()
+//   printWindow.print()
+// }
 function printStamp() {
-  const combinedHTML = stampList.value.map(el => el.outerHTML).join('<div style="margin-top: 10px;"></div>')
+  const combinedHTML = stampList.value
+    .map(el => el.outerHTML)
+    .join('<div style="margin-top: 10px;"></div>');
 
   const printWindow = window.open("", "_blank", "width=800,height=600");
   if (!printWindow) return;
+
   const styles = Array.from(document.querySelectorAll("link[rel='stylesheet'], style"))
     .map(n => n.outerHTML)
     .join("\n");
+
   printWindow.document.write(`
     <html>
       <head>
         <title>Stamp</title>
         ${styles}
+        <style>
+          body {
+            margin: 0;
+            padding: 0;
+          }
+          .print-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding: 10mm;
+          }
+        </style>
       </head>
       <body>
-
-        ${combinedHTML}
-
+        <div class="a4">
+          ${combinedHTML}
+        </div>
       </body>
     </html>
-  `)
-  printWindow.document.close()
-  printWindow.focus()
-  printWindow.print()
+  `);
+
+  printWindow.document.close();
+  printWindow.focus();
+  printWindow.print();
 }
 
 </script>
